@@ -1,4 +1,5 @@
-# FirstProject
+# FirstProject:
+This is my first complete angular project using firebase as backend. it is an e-commerce website.
 
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 8.3.5.
 
