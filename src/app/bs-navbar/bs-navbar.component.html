@@ -10,11 +10,17 @@
           <a class="nav-link" routerLink="/shopping-cart">Shopping Cart</a>
         </li>
         <!-- display login only user is logged out -->
-        <li *ngIf = "!user" class="nav-item">
-          <a class="nav-link" routerLink="/login">Login</a>
-        </li>
+        <!-- this will render what in else part is -->
+        <ng-template #anonymousUser>
+          <li class="nav-item">
+            <a class="nav-link" routerLink="/login">Login</a>
+          </li>
+        </ng-template>
         <!-- display username if there is an user object -->
-        <li ngbDropdown *ngIf = "user" class="nav-item dropdown">
+        <!-- unwrapping the 'user$' and storing in user obj
+        using async pipe which will automatically unsubscribe
+         the observable -->
+        <li ngbDropdown *ngIf = "user$ | async as user; else anonymousUser" class="nav-item dropdown">
           <a ngbDropdownToggle class="nav-link dropdown-toggle" id="dropdown01" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
             {{ user.displayName }}
           </a>
