@@ -30,6 +30,13 @@ export class ProductService {
   }
   //method for updating product
   update(productId, product){
-   return this.db.object('/products/' +productId).update(product);
+   return this.db.object('/products/' +productId)
+   .update(product);
+  }
+
+  //method for deleting the product
+  delete(productId){
+    return this.db.object('/products/' +productId)
+   .remove();
   }
 }
