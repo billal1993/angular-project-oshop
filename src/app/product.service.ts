@@ -24,4 +24,12 @@ export class ProductService {
       })),
     );
   }
+  //getting the product id
+  get(productId){
+    return this.db.object('/products/' + productId);
+  }
+  //method for updating product
+  update(productId, product){
+   return this.db.object('/products/' +productId).update(product);
+  }
 }
