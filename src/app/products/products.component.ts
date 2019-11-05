@@ -1,7 +1,6 @@
 //for displaying all products on home page
 import { Component, OnInit } from '@angular/core';
 import { ProductService } from '../product.service';
-import { CategoryService } from '../category.service';
 import { ActivatedRoute } from '@angular/router';
 import { Product } from '../models/product';
 import { switchMap } from 'rxjs/operators';
@@ -14,13 +13,12 @@ import { switchMap } from 'rxjs/operators';
 export class ProductsComponent {
   products: Product[] = [];
   filteredProducts: Product[]= [];
-  categories$;
   category: string;
 
   constructor(
     route: ActivatedRoute,
     productService: ProductService, 
-    categoryService: CategoryService) {
+    ) {
     //getting all products in products
     productService
     .getAll()
@@ -38,10 +36,6 @@ export class ProductsComponent {
         this.filteredProducts = (this.category) ?
           this.products.filter(p => p.category === this.category) :
           this.products;
-      });
-    //getting all categories
-    this.categories$ = categoryService.getAll();
-
-   }
-
+    });
+  }
 }
