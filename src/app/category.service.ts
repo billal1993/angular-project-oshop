@@ -9,7 +9,7 @@ export class CategoryService {
   //injecting firebase database
   constructor(private db: AngularFireDatabase) { }
 
-  getCategories(){
+  getAll(){
     //to return the list of categories from database
     //and also the key of the categories from database
     return this.db.list('/categories', ref => {return ref.orderByChild('name')})

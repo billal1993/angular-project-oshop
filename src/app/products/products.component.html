@@ -1,1 +1,30 @@
-<p>products works!</p>
+<div class="row">
+    <!-- redering categories -->
+    <div class="col-3">
+        <ul class="list-group">
+            <li *ngFor = "let c of categories$ | async" class="list-group-item">
+                {{c.name}}
+            </li>
+        </ul>
+    </div>
+    <div class="col">
+        <!-- this markup is for rendering products in 2 equally width 
+        columns using bootstrap grip 'equal-width multi-row' -->
+        <div class="row">
+            <ng-container *ngFor = "let p of products$ | async; let i = index">
+                    <div class="col">
+                        <div class="card" style="width: 15rem;">
+                            <img [src]="p.imageUrl" class="card-img-top" alt="...">
+                            <div class="card-body">
+                                <h5 class="card-title">{{ p.title }}</h5>
+                                <p class="card-text">{{ p.price | currency: 'USD':true }}</p>
+                                <a href="#" class="btn btn-primary">Add to cart</a>
+                            </div>
+                        </div>
+                    </div>
+                <!-- condition for line break after every 2 products -->
+                <div *ngIf ="(i + 1) % 2 === 0" class="w-100"></div>
+            </ng-container>
+        </div>
+    </div>
+</div>
