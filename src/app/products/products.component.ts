@@ -17,7 +17,7 @@ export class ProductsComponent {
 
   constructor(
     route: ActivatedRoute,
-    productService: ProductService, 
+    productService: ProductService
     ) {
     //getting all products in products
     productService
