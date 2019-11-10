@@ -1,7 +1,10 @@
 import { Injectable } from '@angular/core';
-import { AngularFireDatabase } from '@angular/fire/database';
+import { AngularFireDatabase, AngularFireObject } from '@angular/fire/database';
 import { Product } from './models/product';
-import { take } from 'rxjs/operators';
+import { take, map } from 'rxjs/operators';
+import { AngularFireModule } from '@angular/fire';
+import { Observable } from 'rxjs';
+import { ShoppingCart } from './models/shopping-cart';
 
 @Injectable({
   providedIn: 'root'
@@ -18,16 +21,18 @@ export class ShoppingCartService {
     });
   }
 //method for reading the shopping cart from firebase
-// private getCart(cartId: string) {
-//   return this.db.object('/shopping-carts/' +cartId);
-// }
+  async getCart(): Promise<Observable<ShoppingCart>> {
+  let cartId = await this.getOrCreateCartId();
+  return this.db.object('/shopping-carts/' +cartId).valueChanges()
+    .pipe(map((x:any) => new ShoppingCart(x.items)));
+}
 
 private getItem(cartId: string, productId: string) {
   return this.db.object('/shopping-carts/' + cartId + '/items/' + productId);
 }
 
 //this method is getting the reference of shopping cart
-  private async getOrCreateCartId() {
+  private async getOrCreateCartId(): Promise<string> {
      //getting shopping cart id from local storage
     let cartId = localStorage.getItem('cartId');
     if(cartId) return cartId;
@@ -41,13 +46,22 @@ private getItem(cartId: string, productId: string) {
   }
   //add to shopping cart or increase its quantity
   async addToCart(product: Product) {
+    this.updateItemQuantity(product, 1);
+  }
+  //delete and decrease the quantity
+  async removeFromCart(product: Product) {
+    this.updateItemQuantity(product, -1);
+  }
+
+  private async updateItemQuantity(product: Product, change: number) {
     //getting ref to the users shopping cart
+    //await is for awaiting to get the result of 'getOrCreateCartId()'
     let cartId = await this.getOrCreateCartId();
     //this gives an observable of shopping cart item 
     let item$ = this.getItem(cartId, product.key);
     item$.valueChanges().pipe(take(1)).subscribe((item: any) => {
-      if(item) item$.update({quantity: item.quantity + 1});
-      else item$.set({product: product, quantity: 1});
+      if(item) item$.update({quantity: item.quantity + change});
+      else item$.set({product: product, quantity: change});
     });
   }
 }
