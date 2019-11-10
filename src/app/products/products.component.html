@@ -8,7 +8,7 @@
     <div class="col">
         <!-- this markup is for rendering products in 2 equally width 
         columns using bootstrap grip 'equal-width multi-row' -->
-        <div class="row">
+        <div class="row" *ngIf = " cart$ | async as cart">
             <ng-container *ngFor = "let p of filteredProducts; let i = index">
                     <div class="col">
                         <product-card [product]="p" [shopping-cart]="cart"></product-card>
