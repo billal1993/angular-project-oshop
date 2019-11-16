@@ -13,22 +13,26 @@ import { ShoppingCartItem } from './models/shopping-cart-item';
 export class ShoppingCartService {
   quantity = 0;
 
-  constructor(private db: AngularFireDatabase) { }
+  constructor(private db: AngularFireDatabase) {
+   }
 
   //method for reading the shopping cart from firebase
   async getCart(): Promise<Observable<ShoppingCart>> {
     let cartId = await this.getOrCreateCartId();
-    return this.db.object('/shopping-carts/' +cartId).valueChanges()
+    return this.db.object('/shopping-carts/' + cartId).valueChanges()
       .pipe(map((x:any) => new ShoppingCart(x.items)));
   }
+    // return this.db.object('/shopping-carts/' + cartId).valueChanges()
+    // .pipe(map((shoppingCart: {items: {[productId: string]: ShoppingCartItem}}) => 
+    //   new ShoppingCart(shoppingCart.items)));
 
   //add to shopping cart or increase its quantity
   async addToCart(product: Product) {
-    this.updateItemQuantity(product, 1);
+    this.updateItem(product, 1);
   }
   //delete and decrease the quantity
   async removeFromCart(product: Product) {
-    this.updateItemQuantity(product, -1);
+    this.updateItem(product, -1);
   }
 
   async clearCart() {
@@ -62,7 +66,7 @@ private getItem(cartId: string, productId: string) {
     return result.key;
   }
 
-  private async updateItemQuantity(product: Product, change: number) {
+  private async updateItem(product: Product, change: number) {
     
     //getting ref to the users shopping cart
     //await is for awaiting to get the result of 'getOrCreateCartId()'
@@ -70,8 +74,18 @@ private getItem(cartId: string, productId: string) {
     //this gives an observable of shopping cart item 
     let item$ = this.getItem(cartId, product.key);
     item$.valueChanges().pipe(take(1)).subscribe((item: any) => {  
-    if(item) item$.update({quantity:item.quantity + change});
-    else item$.set({product: product, quantity: change});   
+    if(item) item$.update({
+      title: product.title,
+      imageUrl: product.imageUrl,
+      price: product.price,
+      quantity:item.quantity + change
+    });
+    else item$.set({
+      title: product.title,
+      imageUrl: product.imageUrl,
+      price: product.price,
+       quantity: change
+      });   
     });
   }
 }

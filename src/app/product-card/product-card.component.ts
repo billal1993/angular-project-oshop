@@ -1,8 +1,8 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { Product } from '../models/product';
 import { ShoppingCartService } from '../shopping-cart.service';
 import { isNgTemplate } from '@angular/compiler';
 import { ShoppingCart } from '../models/shopping-cart';
+import { Product } from '../models/product';
 
 @Component({
   selector: 'product-card',
